@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Copyright 2016, 2023 John Rofrano. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the 'License');
@@ -31,6 +32,13 @@ available (boolean) - True for products that are available for adoption
 import logging
 from enum import Enum
 from decimal import Decimal
+=======
+"""This module defines the database models for the service."""
+import logging
+from enum import Enum
+from decimal import Decimal, InvalidOperation
+from typing import List
+>>>>>>> 47efc06 (duc)
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
@@ -204,6 +212,7 @@ class Product(db.Model):
         return cls.query.filter(cls.name == name)
 
     @classmethod
+<<<<<<< HEAD
     def find_by_price(cls, price: Decimal) -> list:
         """Returns all Products with the given price
 
@@ -219,6 +228,28 @@ class Product(db.Model):
         if isinstance(price, str):
             price_value = Decimal(price.strip(' "'))
         return cls.query.filter(cls.price == price_value)
+=======
+    def find_by_price(cls, price) -> List:
+        """Returns all Products with the given price
+
+        :param price: the price to search for (can be a string or Decimal)
+        :type price: str | Decimal
+
+        :return: a collection of Products with that price
+        :rtype: List
+        """
+        logger.info("Processing price query for %s ...", price)
+
+        # Chuyển đổi giá trị nếu đầu vào là chuỗi
+        if isinstance(price, str):
+            try:
+                price = Decimal(price.strip(' "'))
+            except InvalidOperation:
+                logger.warning("Invalid price input: %s", price)
+                return cls.query.filter(cls.price.is_(None))
+
+        return cls.query.filter(cls.price == price)
+>>>>>>> 47efc06 (duc)
 
     @classmethod
     def find_by_availability(cls, available: bool = True) -> list:
